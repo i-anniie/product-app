@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,6 +12,14 @@ export default function ProductDetailPage() {
 
   const title = data ? `${data.title} — $${data.price}` : "Product Details";
   const description = data?.description ?? "Explore product details";
+
+  const [activeImage, setActiveImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (data) {
+      setActiveImage(data.thumbnail || data.images?.[0] || null);
+    }
+  }, [data]);
 
   return (
     <>
@@ -32,7 +40,7 @@ export default function ProductDetailPage() {
               <div className="md:col-span-2 flex flex-col gap-3">
                 <div className="relative aspect-square w-full overflow-hidden rounded-xl border border-white/20 bg-white/5">
                   <Image
-                    src={data.thumbnail}
+                    src={activeImage || data.thumbnail}
                     alt={`${data.title} image`}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
@@ -41,20 +49,28 @@ export default function ProductDetailPage() {
                   />
                 </div>
                 <div className="grid grid-cols-5 gap-2">
-                  {data.images.slice(0, 5).map((src, idx) => (
-                    <div
-                      key={src + idx}
-                      className="relative aspect-square overflow-hidden rounded-lg border border-gray-800"
-                    >
-                      <Image
-                        src={src}
-                        alt={`${data.title} ${idx + 1}`}
-                        fill
-                        sizes="20vw"
-                        className="object-cover"
-                      />
-                    </div>
-                  ))}
+                  {data.images.slice(0, 5).map((src, idx) => {
+                    const isSelected = (activeImage || data.thumbnail) === src;
+                    return (
+                      <button
+                        key={src + idx}
+                        type="button"
+                        onClick={() => setActiveImage(src)}
+                        className={`relative aspect-square cursor-pointer overflow-hidden rounded-lg border ${
+                          isSelected ? "border-blue-500" : "border-gray-800"
+                        }`}
+                        aria-label={`Show image ${idx + 1}`}
+                      >
+                        <Image
+                          src={src}
+                          alt={`${data.title} ${idx + 1}`}
+                          fill
+                          sizes="20vw"
+                          className="object-cover"
+                        />
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
               <div className="md:col-span-3 text-gray-200">
