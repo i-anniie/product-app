@@ -30,7 +30,7 @@ export default function ProductDetailPage() {
           {!isLoading && data && (
             <article className="grid grid-cols-1 gap-8 md:grid-cols-5">
               <div className="md:col-span-2 flex flex-col gap-3">
-                <div className="relative aspect-square w-full overflow-hidden rounded-xl border border-gray-800 bg-[#0f172a]">
+                <div className="relative aspect-square w-full overflow-hidden rounded-xl border border-white/20 bg-white/5">
                   <Image
                     src={data.thumbnail}
                     alt={`${data.title} image`}
@@ -63,7 +63,7 @@ export default function ProductDetailPage() {
                     {data.title}
                   </h1>
                 </div>
-                <p className="text-gray-300">{data.description}</p>
+                <p className="text-gray-300 text-sm">{data.description}</p>
                 <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
                   {[
                     {
